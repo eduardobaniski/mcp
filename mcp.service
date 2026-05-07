@@ -1,0 +1,73 @@
+# =============================================================================
+# mcp-stack.service
+# Serviço systemd que gerencia o stack completo do MCP:
+#   1. Inicia o Tailscale Funnel (expõe porta 8000 na internet via HTTPS)
+#   2. Inicia o servidor FastMCP via uv run python server.py
+#   3. Ao parar: encerra o servidor e desativa o Funnel
+#
+# INSTALAÇÃO:
+#   sudo cp /home/cadu/mcp/mcp-stack.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable mcp-stack   # opcional: iniciar no boot
+#   sudo systemctl start mcp-stack
+#
+# USO:
+#   sudo systemctl start mcp-stack    # inicia tudo
+#   sudo systemctl stop mcp-stack     # para tudo
+#   sudo systemctl restart mcp-stack  # reinicia tudo
+#   journalctl -u mcp-stack -f        # logs em tempo real
+#
+# DEPENDÊNCIAS:
+#   - tailscale instalado e autenticado (tailscale status deve funcionar)
+#   - uv instalado em /home/cadu/.local/bin/uv
+#   - server.py em /home/cadu/mcp/server.py
+# =============================================================================
+
+[Unit]
+Description=MCP Stack — Tailscale Funnel + FastMCP Server
+# Aguarda rede e o daemon do Tailscale estarem prontos
+After=network-online.target tailscaled.service
+Wants=network-online.target
+Requires=tailscaled.service
+
+[Service]
+Type=exec
+User=cadu
+WorkingDirectory=/home/cadu/mcp
+
+# --- Início ---
+# ExecStartPre: garante que não exista um Funnel antigo antes de subir de novo
+# O prefixo "-" ignora erro quando o Funnel ainda não estiver ativo
+ExecStartPre=-/usr/bin/tailscale funnel off
+
+# ExecStartPre: ativa o Funnel antes de subir o servidor
+# --bg executa em background e persiste mesmo após o processo terminar
+ExecStartPre=/usr/bin/tailscale funnel --bg 8000
+
+# ExecStart: sobe o servidor FastMCP (processo principal do serviço)
+ExecStart=/home/cadu/.local/bin/uv run python server.py
+
+# --- Parada ---
+# ExecStop: desativa o Funnel durante a parada do serviço
+# O prefixo "-" evita falha se o Funnel já tiver sido desligado por outro motivo
+ExecStop=-/usr/bin/tailscale funnel off
+
+# --- Reinício automático ---
+# Reinicia apenas em caso de falha (não reinicia se parado manualmente)
+Restart=on-failure
+RestartSec=5
+
+# --- Ambiente ---
+Environment=PYTHONUNBUFFERED=1
+Environment="UVICORN_PROXY_HEADERS=True"
+Environment="UVICORN_FORWARDED_ALLOW_IPS=*"
+Environment="UVICORN_HOST=0.0.0.0"
+Environment="UVICORN_H11_MAX_INCOMPLETE_EVENT_SIZE=1000000"
+Environment="UVICORN_ALLOWED_HOSTS=*"
+
+# --- Segurança mínima ---
+# Evita que o processo filho herde variáveis de ambiente desnecessárias do sistema
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
