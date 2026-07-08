@@ -6,10 +6,24 @@ from typing import Any
 
 from fastmcp import FastMCP
 import uvicorn
+import os
+from fastmcp.server.middleware import Middleware
+from fastmcp.exceptions import ToolError
+from fastmcp.server.dependencies import get_http_headers
 
-# Name shown to MCP clients
+SECRET = os.environ["MCP_SECRET_TOKEN"]
+
 mcp = FastMCP("terminal-command-server")
 
+class TokenAuthMiddleware(Middleware):
+    async def on_call_tool(self, context, call_next):
+        headers = get_http_headers()
+        auth = headers.get("authorization", "")
+        if auth != f"Bearer {SECRET}":
+            raise ToolError("Não autorizado")
+        return await call_next(context)
+
+mcp.add_middleware(TokenAuthMiddleware())
 
 @mcp.tool()
 def execute_command(command: str, timeout_seconds: int = 30) -> dict[str, Any]:
