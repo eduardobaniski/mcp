@@ -32,8 +32,8 @@ Requires=tailscaled.service
 
 [Service]
 Type=exec
-User=cadu
-WorkingDirectory=/home/cadu/mcp
+User=agente
+WorkingDirectory=/home/agente/mcp
 
 # --- Início ---
 # ExecStartPre: garante que não exista um Funnel antigo antes de subir de novo
@@ -42,10 +42,10 @@ ExecStartPre=-/usr/bin/tailscale funnel off
 
 # ExecStartPre: ativa o Funnel antes de subir o servidor
 # --bg executa em background e persiste mesmo após o processo terminar
-ExecStartPre=/usr/bin/tailscale funnel --bg 8000
+ExecStartPre=+/usr/bin/tailscale funnel --bg 8000
 
 # ExecStart: sobe o servidor FastMCP (processo principal do serviço)
-ExecStart=/home/cadu/.local/bin/uv run python server.py
+ExecStart=/usr/local/bin/uv run python server.py
 
 # --- Parada ---
 # ExecStop: desativa o Funnel durante a parada do serviço
@@ -64,6 +64,7 @@ Environment="UVICORN_FORWARDED_ALLOW_IPS=*"
 Environment="UVICORN_HOST=0.0.0.0"
 Environment="UVICORN_H11_MAX_INCOMPLETE_EVENT_SIZE=1000000"
 Environment="UVICORN_ALLOWED_HOSTS=*"
+
 
 # --- Segurança mínima ---
 # Evita que o processo filho herde variáveis de ambiente desnecessárias do sistema
