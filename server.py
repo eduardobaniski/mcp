@@ -7,8 +7,34 @@ from typing import Any
 from fastmcp import FastMCP
 import uvicorn
 
+from fastmcp.server.auth.providers.github import GitHubProvider
+from fastmcp.server.middleware import Middleware, MiddlewareContext
+from fastmcp.exceptions import ToolError
+from fastmcp.server.dependencies import get_access_token
+
+auth = GitHubProvider(
+    client_id=os.environ["GITHUB_CLIENT_ID"],
+    client_secret=os.environ["GITHUB_CLIENT_SECRET"],
+    base_url=os.environ.get("BASE_URL", "http://localhost:8000"),
+    allowed_client_redirect_uris=[
+        "https://claude.ai/api/mcp/auth_callback",  # necessário pro Claude web
+    ],
+)
+ALLOWED_USERS = {"eduardobaniski"}  # troque pelo seu username do GitHub
+
+class AllowlistMiddleware(Middleware):
+    async def on_call_tool(self, context: MiddlewareContext, call_next):
+        token = get_access_token()
+        username = token.claims.get("login")
+        if username not in ALLOWED_USERS:
+            raise ToolError("Acesso negado: usuário não autorizado.")
+        return await call_next(context)
+
+
 # Name shown to MCP clients
 mcp = FastMCP("terminal-command-server")
+mcp.add_middleware(AllowlistMiddleware())
+
 
 
 @mcp.tool()
