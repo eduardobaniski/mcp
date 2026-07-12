@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import subprocess
 from typing import Any
+from dotenv import load_dotenv
 
 from fastmcp import FastMCP
 import uvicorn
@@ -11,6 +12,8 @@ from fastmcp.server.auth.providers.github import GitHubProvider
 from fastmcp.server.middleware import Middleware, MiddlewareContext
 from fastmcp.exceptions import ToolError
 from fastmcp.server.dependencies import get_access_token
+
+load_dotenv()
 
 auth = GitHubProvider(
     client_id=os.environ["GITHUB_CLIENT_ID"],
@@ -32,7 +35,7 @@ class AllowlistMiddleware(Middleware):
 
 
 # Name shown to MCP clients
-mcp = FastMCP("terminal-command-server")
+mcp = FastMCP("terminal-command-server-authteste", auth=auth)
 mcp.add_middleware(AllowlistMiddleware())
 
 
