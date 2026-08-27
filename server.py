@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import os
 import subprocess
-from typing import Any
+import time
+from typing import Any, Optional
 from dotenv import load_dotenv
 
 from fastmcp import FastMCP
@@ -12,6 +13,8 @@ from fastmcp.server.auth.providers.github import GitHubProvider
 from fastmcp.server.middleware import Middleware, MiddlewareContext
 from fastmcp.exceptions import ToolError
 from fastmcp.server.dependencies import get_access_token
+
+from comando_logger import registrar_execucao
 
 load_dotenv()
 
@@ -23,7 +26,7 @@ auth = GitHubProvider(
         "https://claude.ai/api/mcp/auth_callback",  # necessário pro Claude web
     ],
 )
-ALLOWED_USERS = {"eduardobaniski"}  # troque pelo seu username do GitHub
+ALLOWED_USERS = {"user"}  # troque pelo seu username do GitHub
 
 class AllowlistMiddleware(Middleware):
     async def on_call_tool(self, context: MiddlewareContext, call_next):
@@ -39,6 +42,20 @@ mcp = FastMCP("terminal-command-server-authteste", auth=auth)
 mcp.add_middleware(AllowlistMiddleware())
 
 
+def _usuario_github_atual() -> Optional[str]:
+    """Extrai o login do GitHub do token OAuth da sessão atual, se houver.
+
+    Isolado em função própria e protegido por try/except porque o logging
+    não deve, em hipótese alguma, quebrar a execução do comando em si —
+    se por algum motivo não houver token disponível no contexto, registramos
+    None em vez de propagar erro.
+    """
+    try:
+        token = get_access_token()
+        return token.claims.get("login")
+    except Exception:
+        return None
+
 
 @mcp.tool()
 def execute_command(command: str, timeout_seconds: int = 30) -> dict[str, Any]:
@@ -48,7 +65,23 @@ def execute_command(command: str, timeout_seconds: int = 30) -> dict[str, Any]:
         command: Full command line to execute.
         timeout_seconds: Maximum time allowed before the process is terminated.
     """
+    usuario_so = os.environ.get("USER") or os.environ.get("LOGNAME") or "desconhecido"
+    usuario_github = _usuario_github_atual()
+    diretorio = os.getcwd()
+
     if not command or not command.strip():
+        registrar_execucao(
+            comando=command,
+            usuario_so=usuario_so,
+            usuario_github=usuario_github,
+            diretorio=diretorio,
+            ok=False,
+            exit_code=None,
+            stdout="",
+            stderr="",
+            duracao_segundos=0.0,
+            erro="Command cannot be empty.",
+        )
         return {
             "ok": False,
             "error": "Command cannot be empty.",
@@ -58,6 +91,7 @@ def execute_command(command: str, timeout_seconds: int = 30) -> dict[str, Any]:
         }
 
     timeout_seconds = max(1, min(timeout_seconds, 300))
+    inicio = time.monotonic()
 
     try:
         completed = subprocess.run(
@@ -68,21 +102,65 @@ def execute_command(command: str, timeout_seconds: int = 30) -> dict[str, Any]:
             timeout=timeout_seconds,
             cwd=os.getcwd(),
         )
-        return {
+        duracao = time.monotonic() - inicio
+        resultado = {
             "ok": completed.returncode == 0,
             "exit_code": completed.returncode,
             "stdout": completed.stdout,
             "stderr": completed.stderr,
         }
+        registrar_execucao(
+            comando=command,
+            usuario_so=usuario_so,
+            usuario_github=usuario_github,
+            diretorio=diretorio,
+            ok=resultado["ok"],
+            exit_code=resultado["exit_code"],
+            stdout=resultado["stdout"],
+            stderr=resultado["stderr"],
+            duracao_segundos=duracao,
+        )
+        return resultado
+
     except subprocess.TimeoutExpired as exc:
+        duracao = time.monotonic() - inicio
+        stdout = exc.stdout or ""
+        stderr = exc.stderr or ""
+        erro = f"Command timed out after {timeout_seconds} seconds."
+        registrar_execucao(
+            comando=command,
+            usuario_so=usuario_so,
+            usuario_github=usuario_github,
+            diretorio=diretorio,
+            ok=False,
+            exit_code=None,
+            stdout=stdout,
+            stderr=stderr,
+            duracao_segundos=duracao,
+            erro=erro,
+        )
         return {
             "ok": False,
-            "error": f"Command timed out after {timeout_seconds} seconds.",
+            "error": erro,
             "exit_code": None,
-            "stdout": exc.stdout or "",
-            "stderr": exc.stderr or "",
+            "stdout": stdout,
+            "stderr": stderr,
         }
+
     except Exception as exc:  # Defensive catch so tool always returns structured output
+        duracao = time.monotonic() - inicio
+        registrar_execucao(
+            comando=command,
+            usuario_so=usuario_so,
+            usuario_github=usuario_github,
+            diretorio=diretorio,
+            ok=False,
+            exit_code=None,
+            stdout="",
+            stderr="",
+            duracao_segundos=duracao,
+            erro=str(exc),
+        )
         return {
             "ok": False,
             "error": str(exc),
@@ -91,7 +169,5 @@ def execute_command(command: str, timeout_seconds: int = 30) -> dict[str, Any]:
             "stderr": "",
         }
 
-
-    
 
 mcp.run(transport="http", host="0.0.0.0", port=8000)
