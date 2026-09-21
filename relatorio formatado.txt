@@ -1,0 +1,183 @@
+HORA                   USUARIO    DIRETORIO                 COMANDO
+----                   -------    ---------                 -------
+19/08/26 16:53:56.005  agente     /home/agente/mcpauth      head -5 
+19/08/26 16:53:56.005  agente     /home/agente/mcpauth      ls -la /home/cadu 
+19/08/26 16:53:56.005  agente     /home/agente/mcpauth      /bin/sh -c ls -la /home/cadu 2>&1 | head -5 
+19/08/26 16:53:52.905  agente     /home/agente/mcpauth      find /home/agente -maxdepth 1 -name .* -type f -exec stat -c %A %U:%G %n {} ; 
+19/08/26 16:53:52.901  agente     /home/agente/mcpauth      find /home/agente -maxdepth 1 -name .* -type f -exec stat -c %A %U:%G %n {} ; 
+19/08/26 16:53:52.897  agente     /home/agente/mcpauth      cut -d: -f6 
+19/08/26 16:53:52.897  agente     /home/agente/mcpauth      getent passwd cadu 
+19/08/26 16:53:52.893  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a /home/agente 
+19/08/26 16:53:52.893  agente     /home/agente/mcpauth      cut -d: -f6 
+19/08/26 16:53:52.893  agente     /home/agente/mcpauth      getent passwd cadu 
+19/08/26 16:53:52.889  agente     /home/agente/mcpauth      /bin/sh -c echo '### 7.2.9 Permissoes dos diretorios home ###'\012for u in cadu agente; do\012  home=$(getent passwd $u | cut -d: -f6) 
+19/08/26 16:53:47.049  agente     /home/agente/mcpauth      awk -F: ($3>=1000 && $7 !~ /(nologin|false)$/) {print $1":"$3":"$6":"$7} /etc/passwd 
+19/08/26 16:53:47.049  agente     /home/agente/mcpauth      getent group shadow 
+19/08/26 16:53:47.045  agente     /home/agente/mcpauth      stat /home/teste 
+19/08/26 16:53:47.045  agente     /home/agente/mcpauth      ls -lan /home/ 
+19/08/26 16:53:47.045  agente     /home/agente/mcpauth      /bin/sh -c echo '### detalhes /home/teste (sem dono/grupo) ###'\012ls -lan /home/ 2>/dev/null\012stat /home/teste 2>&1\012\012echo; echo '## 
+19/08/26 16:53:41.409  agente     /home/agente/mcpauth      timeout 60 find / -xdev -type f ( -perm -4000 -o -perm -2000 ) 
+19/08/26 16:53:38.321  agente     /home/agente/mcpauth      timeout 60 find / -xdev ( -nouser -o -nogroup ) 
+19/08/26 16:53:38.321  agente     /home/agente/mcpauth      /bin/sh -c echo '### 7.1.12 Arquivos/diretorios sem dono ou grupo valido ###'\012timeout 60 find / -xdev \( -nouser -o -nogroup \)  
+19/08/26 16:53:33.813  agente     /home/agente/mcpauth      timeout 60 find / -xdev -type d -perm -0002 ! -perm -1000 
+19/08/26 16:53:26.021  agente     /home/agente/mcpauth      timeout 60 find / -xdev -type f -perm -0002 ( -path /proc -o -path /sys -o -path /run ) -prune -o -type f -perm -0002 -print 
+19/08/26 16:53:26.021  agente     /home/agente/mcpauth      head -30 
+19/08/26 16:53:26.021  agente     /home/agente/mcpauth      grep -v ^/proc\|^/sys\|^/run 
+19/08/26 16:53:26.017  agente     /home/agente/mcpauth      /bin/sh -c echo '### 7.1.11 Arquivos/diretorios world-writable ###'\012timeout 60 find / -xdev -type f -perm -0002 \( -path '/proc' 
+19/08/26 16:53:20.201  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a /etc/security/opasswd 
+19/08/26 16:53:20.201  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a /etc/shells 
+19/08/26 16:53:20.201  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a /etc/gshadow- 
+19/08/26 16:53:20.197  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a /etc/gshadow 
+19/08/26 16:53:20.197  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a /etc/shadow- 
+19/08/26 16:53:20.197  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a /etc/shadow 
+19/08/26 16:53:20.193  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a /etc/group- 
+19/08/26 16:53:20.193  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a /etc/group 
+19/08/26 16:53:20.189  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a /etc/passwd- 
+19/08/26 16:53:20.189  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a /etc/passwd 
+19/08/26 16:53:20.189  agente     /home/agente/mcpauth      /bin/sh -c echo '### 7.1.1-7.1.10 Permissoes de arquivos criticos ###'\012for f in /etc/passwd /etc/passwd- /etc/group /etc/group-  
+19/08/26 16:52:36.747  agente     /home/agente/mcpauth      grep -i umask 
+19/08/26 16:52:36.747  agente     /home/agente/mcpauth      cat /etc/login.defs 
+19/08/26 16:52:36.743  agente     /home/agente/mcpauth      grep -RiE umask /etc/profile /etc/profile.d/70-systemd-shell-extra.sh /etc/profile.d/Z99-cloud-locale-test.sh /etc/profile.d/at- 
+19/08/26 16:52:36.743  agente     /home/agente/mcpauth      grep -Ei ^\s*UMASK /etc/login.defs 
+19/08/26 16:52:36.743  agente     /home/agente/mcpauth      grep -RiE TMOUT /etc/profile /etc/profile.d/70-systemd-shell-extra.sh /etc/profile.d/Z99-cloud-locale-test.sh /etc/profile.d/at- 
+19/08/26 16:52:36.743  agente     /home/agente/mcpauth      /bin/sh -c echo '### 5.4.3.2 TMOUT (timeout de shell) ###'\012grep -RiE 'TMOUT' /etc/profile /etc/profile.d/*.sh /etc/bash.bashrc / 
+19/08/26 16:52:25.659  agente     /home/agente/mcpauth      head -3 
+19/08/26 16:52:25.659  agente     /home/agente/mcpauth      cat /etc/shadow 
+19/08/26 16:52:25.659  agente     /home/agente/mcpauth      awk -F: ($3 < 1000 && $1!="root" && $1!="nobody") {print $1":"$3":"$7} /etc/passwd 
+19/08/26 16:52:25.655  agente     /home/agente/mcpauth      grep -Ri umask /etc/bash.bashrc 
+19/08/26 16:52:25.655  agente     /home/agente/mcpauth      grep -Ri umask /etc/profile /etc/profile.d/*.conf 
+19/08/26 16:52:25.655  agente     /home/agente/mcpauth      grep -Ei ^\s*UMASK /etc/login.defs 
+19/08/26 16:52:25.651  agente     /home/agente/mcpauth      grep -Ri umask /root/.bashrc /root/.profile /root/.bash_profile 
+19/08/26 16:52:25.651  agente     /home/agente/mcpauth      /bin/sh -c echo '### 5.4.2.6 Root umask (arquivos de perfil) ###'\012grep -Ri 'umask' /root/.bashrc /root/.profile /root/.bash_prof 
+19/08/26 16:52:18.055  agente     /home/agente/mcpauth      awk -F: ($3 == 0) {print $1} /etc/group 
+19/08/26 16:52:18.055  agente     /home/agente/mcpauth      awk -F: ($4 == 0) {print $1} /etc/passwd 
+19/08/26 16:52:18.051  agente     /home/agente/mcpauth      getent group wheel 
+19/08/26 16:52:18.051  agente     /home/agente/mcpauth      getent group sugroup 
+19/08/26 16:52:18.047  agente     /home/agente/mcpauth      cat /etc/pam.d/su 
+19/08/26 16:52:18.047  agente     /home/agente/mcpauth      grep -E ^\s*auth\s+(required|requisite)\s+pam_wheel\.so /etc/pam.d/su 
+19/08/26 16:52:18.047  agente     /home/agente/mcpauth      /bin/sh -c echo '### 5.2.7 Restricao ao comando su (PAM) ###'\012grep -E '^\s*auth\s+(required|requisite)\s+pam_wheel\.so' /etc/pam 
+19/08/26 16:52:10.466  agente     /home/agente/mcpauth      id 
+19/08/26 16:52:10.458  agente     /home/agente/mcpauth      whoami 
+19/08/26 16:52:10.458  agente     /home/agente/mcpauth      ls -la /etc/sudoers.d/ 
+19/08/26 16:52:10.454  agente     /home/agente/mcpauth      stat -c Owner: %U Group: %G Perms: %a /etc/sudoers /etc/sudoers.d 
+19/08/26 16:52:10.454  agente     /home/agente/mcpauth      /bin/sh -c stat -c 'Owner: %U Group: %G Perms: %a' /etc/sudoers /etc/sudoers.d\012ls -la /etc/sudoers.d/\012whoami\012id 
+19/08/26 16:52:04.958  agente     /home/agente/mcpauth      cat /etc/sudoers.d/* 
+19/08/26 16:52:04.958  agente     /home/agente/mcpauth      ls -la /etc/sudoers.d/ 
+19/08/26 16:52:04.958  agente     /home/agente/mcpauth      cat /etc/sudoers 
+19/08/26 16:52:04.938  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:52:04.938  agente     /home/agente/mcpauth      /bin/sh -c echo '### 5.2.1 sudo instalado ###'\012dpkg -l | grep -E '^ii\s+sudo\b'\012\012echo; echo '### 5.2.2-5.2.6 sudoers ###'\012cat /e 
+19/08/26 16:51:58.594  agente     /home/agente/mcpauth      grep -v ^$ 
+19/08/26 16:51:58.594  agente     /home/agente/mcpauth      grep -v ^# 
+19/08/26 16:51:58.594  agente     /home/agente/mcpauth      cat /etc/ssh/sshd_config 
+19/08/26 16:51:58.594  agente     /home/agente/mcpauth      cat /etc/ssh/sshd_config.d/50-cloud-init.conf 
+19/08/26 16:51:58.594  agente     /home/agente/mcpauth      /bin/sh -c cat /etc/ssh/sshd_config.d/50-cloud-init.conf\012echo '---'\012cat /etc/ssh/sshd_config | grep -v '^#' | grep -v '^$' 
+19/08/26 16:51:53.986  agente     /home/agente/mcpauth      grep -Ei ^(allowusers|denyusers|allowgroups|denygroups|loglevel|permitrootlogin)  
+19/08/26 16:51:53.986  agente     /home/agente/mcpauth      sudo -n sshd -T 
+19/08/26 16:51:53.986  agente     /home/agente/mcpauth      cat /etc/ssh/sshd_config.d/50-cloud-init.conf 
+19/08/26 16:51:53.986  agente     /home/agente/mcpauth      grep -Ei ^Include /etc/ssh/sshd_config 
+19/08/26 16:51:53.982  agente     /home/agente/mcpauth      grep -Ei ^(AllowUsers|DenyUsers|AllowGroups|DenyGroups|LogLevel|PermitRootLogin) /etc/ssh/sshd_config 
+19/08/26 16:51:53.982  agente     /home/agente/mcpauth      /bin/sh -c echo '### sshd_config: AllowUsers/DenyUsers/AllowGroups/DenyGroups ###'\012grep -Ei '^(AllowUsers|DenyUsers|AllowGroups| 
+19/08/26 16:51:49.290  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/ssh/ssh_host_rsa_key.pub 
+19/08/26 16:51:49.286  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/ssh/ssh_host_ed25519_key.pub 
+19/08/26 16:51:49.286  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/ssh/ssh_host_ecdsa_key.pub 
+19/08/26 16:51:49.286  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/ssh/ssh_host_rsa_key 
+19/08/26 16:51:49.286  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/ssh/ssh_host_ed25519_key 
+19/08/26 16:51:49.282  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/ssh/ssh_host_ecdsa_key 
+19/08/26 16:51:49.282  agente     /home/agente/mcpauth      ls -la /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_ecdsa_key.pub /etc/ssh/ssh_host_ed25519_key /etc/ssh/ssh_host_ed25519_key.p 
+19/08/26 16:51:49.282  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/ssh/sshd_config.d/50-cloud-init.conf 
+19/08/26 16:51:49.278  agente     /home/agente/mcpauth      ls -la /etc/ssh/sshd_config.d/ 
+19/08/26 16:51:49.278  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/ssh/sshd_config 
+19/08/26 16:51:49.278  agente     /home/agente/mcpauth      /bin/sh -c echo '### 5.1.1 Permissoes sshd_config ###'\012stat -c 'Owner: %U  Group: %G  Perms: %a  Path: %n' /etc/ssh/sshd_config 
+19/08/26 16:50:47.191  agente     /home/agente/mcpauth      ss -tulnp 
+19/08/26 16:50:47.191  agente     /home/agente/mcpauth      head -30 
+19/08/26 16:50:47.191  agente     /home/agente/mcpauth      /bin/sh /usr/bin/which ufw 
+19/08/26 16:50:47.151  agente     /home/agente/mcpauth      nft list ruleset 
+19/08/26 16:50:47.151  agente     /home/agente/mcpauth      head -20 
+19/08/26 16:50:47.151  agente     /home/agente/mcpauth      iptables -L -n 
+19/08/26 16:50:47.151  agente     /home/agente/mcpauth      /bin/sh -c echo '### tentando sem sudo ###'\012iptables -L -n 2>&1 | head -20\012echo '---'\012nft list ruleset 2>&1 | head -20\012echo; ech 
+19/08/26 16:50:42.327  agente     /home/agente/mcpauth      head -20 
+19/08/26 16:50:42.327  agente     /home/agente/mcpauth      sudo -n nft list ruleset 
+19/08/26 16:50:42.315  agente     /home/agente/mcpauth      head -20 
+19/08/26 16:50:42.315  agente     /home/agente/mcpauth      sudo -n iptables -L -n 
+19/08/26 16:50:42.303  agente     /home/agente/mcpauth      systemctl is-active nftables 
+19/08/26 16:50:42.291  agente     /home/agente/mcpauth      systemctl is-enabled nftables 
+19/08/26 16:50:42.279  agente     /home/agente/mcpauth      systemctl is-active firewalld 
+19/08/26 16:50:42.271  agente     /home/agente/mcpauth      systemctl is-enabled firewalld 
+19/08/26 16:50:42.263  agente     /home/agente/mcpauth      systemctl is-active ufw 
+19/08/26 16:50:42.251  agente     /home/agente/mcpauth      systemctl is-enabled ufw 
+19/08/26 16:50:42.231  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:50:42.211  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:50:42.207  agente     /home/agente/mcpauth      grep -E ^ii\s+iptables-persistent\b 
+19/08/26 16:50:42.207  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:50:42.191  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:50:42.175  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:50:42.171  agente     /home/agente/mcpauth      grep -E ^ii\s+ufw\b 
+19/08/26 16:50:42.171  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:50:42.171  agente     /home/agente/mcpauth      /bin/sh -c echo '### Utilitarios de firewall instalados ###'\012for pkg in ufw firewalld iptables-persistent nftables; do\012  echo "- 
+19/08/26 16:49:53.069  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:49:53.065  agente     /home/agente/mcpauth      grep -E ^ii\s+at\b 
+19/08/26 16:49:53.065  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:49:53.049  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:49:53.049  agente     /home/agente/mcpauth      /bin/sh -c echo '### pacote cron ###'\012dpkg -l | grep -E '^ii\s+cron\b' \012echo; echo '### pacote at (exato) ###'\012dpkg -l | grep -E 
+19/08/26 16:49:47.141  agente     /home/agente/mcpauth      /bin/sh /usr/bin/which at atd 
+19/08/26 16:49:47.125  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:49:47.121  agente     /home/agente/mcpauth      /bin/sh -c echo '### cron.allow / cron.deny ###'\012for f in /etc/cron.allow /etc/cron.deny; do\012  echo "-- $f --"\012  if [ -f "$f" ]; 
+19/08/26 16:49:40.760  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/cron.d 
+19/08/26 16:49:40.760  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/cron.monthly 
+19/08/26 16:49:40.760  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/cron.weekly 
+19/08/26 16:49:40.756  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/cron.daily 
+19/08/26 16:49:40.756  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/cron.hourly 
+19/08/26 16:49:40.756  agente     /home/agente/mcpauth      stat -c Owner: %U  Group: %G  Perms: %a  Path: %n /etc/crontab 
+19/08/26 16:49:40.756  agente     /home/agente/mcpauth      /bin/sh -c echo '### Permissões dos arquivos/diretórios cron ###'\012for f in /etc/crontab /etc/cron.hourly /etc/cron.daily /etc/ 
+19/08/26 16:48:16.523  agente     /home/agente/mcpauth      /usr/bin/ischroot -t 
+19/08/26 16:48:14.731  agente     /home/agente/mcpauth      /usr/bin/dpkg --print-foreign-architectures 
+19/08/26 16:48:14.723  agente     /home/agente/mcpauth      /usr/bin/dpkg --print-foreign-architectures 
+19/08/26 16:48:14.715  agente     /home/agente/mcpauth      tail -30 
+19/08/26 16:48:14.715  agente     /home/agente/mcpauth      apt-get -s upgrade 
+19/08/26 16:48:14.715  agente     /home/agente/mcpauth      cat /etc/apt/apt.conf.d/20auto-upgrades 
+19/08/26 16:48:14.703  agente     /home/agente/mcpauth      systemctl is-active unattended-upgrades 
+19/08/26 16:48:14.695  agente     /home/agente/mcpauth      systemctl is-enabled unattended-upgrades 
+19/08/26 16:48:14.659  agente     /home/agente/mcpauth      dpkg -l 
+19/08/26 16:48:14.651  agente     /home/agente/mcpauth      stat -c %y %n /var/lib/apt/lists/archive.raspberrypi.com_debian_dists_trixie_main_binary-arm64_Packages /var/lib/apt/lists/archi 
+19/08/26 16:48:14.651  agente     /home/agente/mcpauth      head -5 
+19/08/26 16:48:13.903  agente     /home/agente/mcpauth      /usr/bin/dpkg --print-foreign-architectures 
+19/08/26 16:48:13.899  agente     /home/agente/mcpauth      /usr/bin/dpkg --print-foreign-architectures 
+19/08/26 16:48:13.891  agente     /home/agente/mcpauth      apt list --upgradable 
+19/08/26 16:48:13.891  agente     /home/agente/mcpauth      head -50 
+19/08/26 16:48:13.891  agente     /home/agente/mcpauth      /bin/sh -c echo '### Pacotes atualizáveis (cache atual) ###'; apt list --upgradable 2>/dev/null | head -50\012echo; echo '### Data 
+19/08/26 16:48:07.975  agente     /home/agente/mcpauth      tail -40 
+19/08/26 16:48:07.975  agente     /home/agente/mcpauth      sudo -n apt-get update 
+19/08/26 16:48:07.975  agente     /home/agente/mcpauth      /bin/sh -c sudo -n apt-get update 2>&1 | tail -40 
+19/08/26 16:48:03.027  agente     /home/agente/mcpauth      /usr/bin/dpkg --print-foreign-architectures 
+19/08/26 16:48:03.015  agente     /home/agente/mcpauth      /usr/bin/dpkg --print-foreign-architectures 
+19/08/26 16:48:02.891  agente     /home/agente/mcpauth      tail -40 
+19/08/26 16:48:02.891  agente     /home/agente/mcpauth      apt-get update 
+19/08/26 16:48:02.891  agente     /home/agente/mcpauth      head -30 
+19/08/26 16:48:02.883  agente     /home/agente/mcpauth      grep -E ^pub|^uid 
+19/08/26 16:48:02.883  agente     /home/agente/mcpauth      gpg --show-keys --with-colons /usr/share/keyrings/tailscale-archive-keyring.gpg 
+19/08/26 16:48:02.879  agente     /home/agente/mcpauth      grep -E ^pub|^uid 
+19/08/26 16:48:02.879  agente     /home/agente/mcpauth      gpg --show-keys --with-colons /usr/share/keyrings/raspberrypi-archive-keyring.pgp 
+19/08/26 16:48:02.871  agente     /home/agente/mcpauth      grep -E ^pub|^uid 
+19/08/26 16:48:02.871  agente     /home/agente/mcpauth      gpg --show-keys --with-colons /etc/apt/keyrings/docker.asc 
+19/08/26 16:48:02.835  agente     /home/agente/mcpauth      grep -E ^pub|^uid 
+19/08/26 16:48:02.835  agente     /home/agente/mcpauth      gpg --show-keys --with-colons /usr/share/keyrings/debian-archive-keyring.pgp 
+19/08/26 16:48:02.775  agente     /home/agente/mcpauth      gpg --show-keys --with-colons /usr/share/keyrings/cloudflare-main.gpg 
+19/08/26 16:48:02.775  agente     /home/agente/mcpauth      grep -E ^pub|^uid 
+19/08/26 16:48:02.775  agente     /home/agente/mcpauth      /bin/sh -c echo '### GPG keyrings referenced ###'; for k in /usr/share/keyrings/cloudflare-main.gpg /usr/share/keyrings/debian-a 
+19/08/26 16:47:57.391  agente     /home/agente/mcpauth      cat /etc/apt/sources.list.d/tailscale.list 
+19/08/26 16:47:57.387  agente     /home/agente/mcpauth      cat /etc/apt/sources.list.d/raspi.sources 
+19/08/26 16:47:57.387  agente     /home/agente/mcpauth      cat /etc/apt/sources.list.d/docker.sources 
+19/08/26 16:47:57.387  agente     /home/agente/mcpauth      cat /etc/apt/sources.list.d/docker.list 
+19/08/26 16:47:57.383  agente     /home/agente/mcpauth      cat /etc/apt/sources.list.d/debian.sources 
+19/08/26 16:47:57.379  agente     /home/agente/mcpauth      cat /etc/apt/sources.list.d/cloudflared.list 
+19/08/26 16:47:57.379  agente     /home/agente/mcpauth      ls -la /etc/apt/sources.list.d/ 
+19/08/26 16:47:57.379  agente     /home/agente/mcpauth      cat /etc/apt/sources.list 
+19/08/26 16:47:57.375  agente     /home/agente/mcpauth      /bin/sh -c echo '### APT sources.list ###'; cat /etc/apt/sources.list 2>/dev/null; echo; echo '### sources.list.d ###'; ls -la / 
+19/08/26 16:47:52.099  agente     /home/agente/mcpauth      uname -a 
+19/08/26 16:47:52.099  agente     /home/agente/mcpauth      cat /etc/os-release 
+19/08/26 16:47:52.099  agente     /home/agente/mcpauth      /bin/sh -c cat /etc/os-release; echo '---'; uname -a 
+19/08/26 16:44:56.423  agente     /home/agente/mcpauth      ls 
+19/08/26 16:44:56.423  agente     /home/agente/mcpauth      /bin/sh -c ls 
+19/08/26 16:42:43.892  agente     /home/agente/mcpauth      /home/agente/mcpauth/.venv/bin/python3 server.py 
+19/08/26 16:42:42.928  agente     /home/agente/mcpauth      /usr/local/bin/uv run python server.py 
+19/08/26 16:42:42.380  agente     /home/agente/mcpauth      /usr/bin/tailscale funnel off 
