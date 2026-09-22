@@ -1,67 +1,41 @@
-# Python MCP Terminal Command Server
+# Servidor MCP para Avaliação da Segurança e Fortalecimento de Sistemas Linux
 
-This project provides an MCP server that exposes one tool:
+Este repositório contém os arquivos e logs utilizados no desenvolvimento do meu trabalho de conclusão de curso. O objetivo do servidor é utilizar o protocolo MCP para avaliar a capacidade de um LLM analisar a segurança de um servidor Linux
+
+O servidor contém apenas uma ferramenta:
 
 - `execute_command(command, timeout_seconds=30)`
 
-The tool runs a command on the host machine and returns:
+A ferramenta recebe um comando e retorna os seguintes dados:
 
 - `ok` (boolean)
 - `exit_code` (int or null)
 - `stdout` (string)
 - `stderr` (string)
-- `error` (string, only when applicable)
+- `error` (string, quando for o caso)
 
-## 1) Create and activate a virtual environment (Windows PowerShell)
+## 1) Criar um ambiente
 
 ```powershell
 uv venv
 \.venv\Scripts\Activate.ps1
 ```
 
-## 2) Install dependencies
+## 2) Instalar as dependências
 
 ```powershell
 uv sync
 ```
 
-## 3) Run the MCP server
+## 3) Rodar o servidor
 
 ```powershell
 uv run python server.py
 ```
 
-The server runs over stdio, which is what most MCP clients expect for local servers.
+O servidor está configurado para transporte via HTTP. Portanto, é necessário expor uma porta redirecionando para a porta do servidor MCP (porta 8000)
 
-## 4) Example MCP client config
 
-Use your MCP client configuration mechanism and point it to this server process.
-A typical local stdio config looks like this:
+## Aviso de segurança
 
-```json
-{
-  "mcpServers": {
-    "terminal": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--directory",
-        "c:/Users/cadub/mcp_command",
-        "python",
-        "server.py"
-      ]
-    }
-  }
-}
-```
-
-This avoids the startup issue where the client launches from `C:/Windows/System32` and cannot find `server.py`.
-
-## Troubleshooting
-
-- Ensure `uv` is installed and on PATH.
-- If your MCP client still fails to launch, check stderr logs from the server. The server now logs startup cwd to stderr.
-
-## Security note
-
-This server executes arbitrary shell commands. Only run it in trusted environments.
+Este servidor é equivalente a um shell remoto. Utilize apenas em servidores sem dados sensíveis. Utilize por sua conta e risco
